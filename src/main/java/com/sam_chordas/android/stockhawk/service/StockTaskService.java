@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
@@ -32,6 +35,20 @@ import java.util.ArrayList;
 public class StockTaskService extends GcmTaskService{
   private String LOG_TAG = StockTaskService.class.getSimpleName();
 
+  private static final int INVALID_STOCK_STATE = 1;
+
+  private Handler mHandler = new Handler(Looper.getMainLooper()) {
+    @Override
+    public void handleMessage(Message msg) {
+      if(msg.what == INVALID_STOCK_STATE) {
+        String stockSymbol = (String)msg.obj;
+        Toast.makeText(mContext.getApplicationContext(), stockSymbol + " is not a valid stock symbol", Toast.LENGTH_LONG).show();
+      } else {
+        super.handleMessage(msg);
+      }
+    }
+  };
+
   private OkHttpClient client = new OkHttpClient();
   private Context mContext;
   private StringBuilder mStoredSymbols = new StringBuilder();
@@ -55,6 +72,7 @@ public class StockTaskService extends GcmTaskService{
   @Override
   public int onRunTask(TaskParams params){
     Cursor initQueryCursor;
+    String stockInput = null;
     if (mContext == null){
       mContext = this;
     }
@@ -98,7 +116,7 @@ public class StockTaskService extends GcmTaskService{
     } else if (params.getTag().equals("add")){
       isUpdate = false;
       // get symbol from params.getExtra and build query
-      String stockInput = params.getExtras().getString("symbol");
+      stockInput = params.getExtras().getString("symbol");
       // check that stockInput is a valid stock
       try {
         urlStringBuilder.append(URLEncoder.encode("\""+stockInput+"\")", "UTF-8"));
@@ -129,8 +147,8 @@ public class StockTaskService extends GcmTaskService{
           }
           ArrayList<ContentProviderOperation> res = Utils.quoteJsonToContentVals(getResponse);
           if(res == null || res.size() == 0) {
-            Toast.makeText(mContext, "Invalid stock symbol", Toast.LENGTH_LONG).show();
-            Log.e(LOG_TAG, "invalid stock symbol");
+            Message msg = mHandler.obtainMessage(INVALID_STOCK_STATE, stockInput);
+            msg.sendToTarget();
           } else {
             mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY, res);
             //Utils.quoteJsonToContentVals(getResponse)); // place where error arises
@@ -145,5 +163,4 @@ public class StockTaskService extends GcmTaskService{
 
     return result;
   }
-
 }
