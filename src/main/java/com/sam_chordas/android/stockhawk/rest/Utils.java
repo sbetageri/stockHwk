@@ -5,6 +5,8 @@ import android.util.Log;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +32,11 @@ public class Utils {
         if (count == 1){
           jsonObject = jsonObject.getJSONObject("results")
               .getJSONObject("quote");
-          batchOperations.add(buildBatchOperation(jsonObject));
+          if(isValidStock(jsonObject)) {
+            Log.e(LOG_TAG, "trial");
+            batchOperations.add(buildBatchOperation(jsonObject));
+          }
+          //batchOperations.add(buildBatchOperation(jsonObject));
         } else{
           resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
 
@@ -91,5 +97,20 @@ public class Utils {
       e.printStackTrace();
     }
     return builder.build();
+  }
+
+  public static boolean isValidStock(JSONObject json) {
+    try {
+      String currency = json.getString("currency");
+      Log.e(LOG_TAG, "currency : " + currency);
+      if(currency == null || currency.equals("null") || currency.equals("")) {
+        return false;
+      }
+    } catch(Exception e) {
+      Log.e(LOG_TAG, "error in json obj");
+      //e.printStackTrace();
+      return false;
+    }
+    return true;
   }
 }
