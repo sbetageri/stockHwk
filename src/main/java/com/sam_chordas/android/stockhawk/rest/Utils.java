@@ -103,15 +103,24 @@ public class Utils {
   }
 
   public static boolean isValidStock(JSONObject json) {
-    try {
-      String currency = json.getString("currency");
-      Log.e(LOG_TAG, "currency : " + currency);
-      if(currency == null || currency.equals("null") || currency.equals("")) {
-        return false;
+    Log.e(LOG_TAG, "JSON : " + json.toString());
+    Iterator<String> keys = json.keys();
+    int keyCount = 0;
+    int nullKeyCount = 0;
+    while(keys.hasNext()) {
+      keyCount += 1;
+      try {
+        String value = (String)json.getString(keys.next());
+        if(value.equals("null")) {
+          nullKeyCount += 1;
+        }
+      } catch(Exception e) {
+        nullKeyCount += 1;
+        Log.e(LOG_TAG, e.toString());
+        e.printStackTrace();
       }
-    } catch(Exception e) {
-      Log.e(LOG_TAG, "error in json obj");
-      //e.printStackTrace();
+    }
+    if((keyCount - 2)== nullKeyCount) {
       return false;
     }
     return true;

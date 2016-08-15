@@ -160,7 +160,6 @@ public class StockTaskService extends GcmTaskService{
         e.printStackTrace();
       }
     }
-
     return result;
   }
 }
