@@ -59,6 +59,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private Cursor mCursor;
     boolean isConnected;
 
+    public static final String STOCK_SYMBOL = "stock_symbol";
     private static final int SET_ACTIVITY_REF_FLAG = 100;
     private static final int UNSET_ACTIVITY_REF_FLAG = 102;
     public static Handler sHandler = new Handler() {
@@ -141,10 +142,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         //TODO:
                         // do something on item click
                         String symbol;
-                        String bidPrice;
-                        String change;
                         symbol = (String) ((TextView) v.findViewById(R.id.stock_symbol)).getText();
-                        Toast.makeText(getApplicationContext(), symbol, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), symbol + " SELECTED", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(MyStocksActivity.this, StockDetailActivity.class);
+                        intent.putExtra(STOCK_SYMBOL, symbol);
+                        startActivity(intent);
                     }
                 }));
         recyclerView.setAdapter(mCursorAdapter);
