@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -19,6 +20,7 @@ import com.google.android.gms.gcm.TaskParams;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.Utils;
+import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -35,19 +37,7 @@ import java.util.ArrayList;
 public class StockTaskService extends GcmTaskService{
   private String LOG_TAG = StockTaskService.class.getSimpleName();
 
-  private static final int INVALID_STOCK_STATE = 1;
-
-  private Handler mHandler = new Handler(Looper.getMainLooper()) {
-    @Override
-    public void handleMessage(Message msg) {
-      if(msg.what == INVALID_STOCK_STATE) {
-        String stockSymbol = (String)msg.obj;
-        Toast.makeText(mContext.getApplicationContext(), stockSymbol + " is not a valid stock symbol", Toast.LENGTH_LONG).show();
-      } else {
-        super.handleMessage(msg);
-      }
-    }
-  };
+  public static final int INVALID_STOCK_STATE = 1;
 
   private OkHttpClient client = new OkHttpClient();
   private Context mContext;
@@ -147,7 +137,7 @@ public class StockTaskService extends GcmTaskService{
           }
           ArrayList<ContentProviderOperation> res = Utils.quoteJsonToContentVals(getResponse);
           if(res == null || res.size() == 0) {
-            Message msg = mHandler.obtainMessage(INVALID_STOCK_STATE, stockInput);
+            Message msg = MyStocksActivity.sHandler.obtainMessage(INVALID_STOCK_STATE, stockInput);
             msg.sendToTarget();
           } else {
             mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY, res);
