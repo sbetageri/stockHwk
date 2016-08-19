@@ -1,19 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <!--
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <com.db.chart.view.LineChartView
-        xmlns:chart="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/linechart"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-        -->
-    <TextView
-        android:text="Sai Ram"
-        android:textSize="@dimen/activity_text_size"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/stock_linechart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textview_detail_stock_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/activity_text_size"/>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/stock_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"/>
+            </LinearLayout>
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/stock_max_val"
+                android:textSize="@dimen/activity_text_size"
+                tools:text="sai ram"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+        <!--
+        <TextView
+            android:text="Sai Ram"
+            android:textSize="@dimen/activity_text_size"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+            -->
+    </LinearLayout>
 
 </FrameLayout>
