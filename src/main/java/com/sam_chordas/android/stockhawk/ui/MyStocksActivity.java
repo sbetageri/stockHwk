@@ -60,8 +60,13 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     boolean isConnected;
 
     public static final String STOCK_SYMBOL = "stock_symbol";
+    public static final String STOCK_CUR_VAL = "stock_current_value";
+
+
     private static final int SET_ACTIVITY_REF_FLAG = 100;
     private static final int UNSET_ACTIVITY_REF_FLAG = 102;
+
+
     public static Handler sHandler = new Handler() {
         private Activity mAct;
 
@@ -141,11 +146,12 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     public void onItemClick(View v, int position) {
                         //TODO:
                         // do something on item click
-                        String symbol;
-                        symbol = (String) ((TextView) v.findViewById(R.id.stock_symbol)).getText();
+                        String symbol = (String) ((TextView) v.findViewById(R.id.stock_symbol)).getText();
+                        String bidPrice = (String)((TextView)v.findViewById(R.id.bid_price)).getText();
                         Toast.makeText(getApplicationContext(), symbol + " SELECTED", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(MyStocksActivity.this, StockDetailActivity.class);
                         intent.putExtra(STOCK_SYMBOL, symbol);
+                        intent.putExtra(STOCK_CUR_VAL, bidPrice);
                         startActivity(intent);
                     }
                 }));

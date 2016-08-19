@@ -47,6 +47,7 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
     private TextView mMaxVal;
     private LineChart mChart;
     private ArrayList<HistoricalStock> mStockDetails;
+    private static int detailLen = -1;
 
     class Pair {
         float x;
@@ -64,13 +65,10 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                detailLen = mStockDetails.size() - 1;
                 plotChart();
             }
         });
-    }
-
-    public void callPlotChart() {
-        plotChart();
     }
 
     public ArrayList<Pair> genTrialData() {
@@ -89,6 +87,11 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
         mChart = (LineChart)findViewById(R.id.stock_linechart);
     }
 
+    public void displayHighlightedStockData(HistoricalStock stock) {
+        mDate.setText(stock.getCalendarDate());
+        mMaxVal.setText(Float.toString(stock.getMaxVal()));
+    }
+
     public void beautifyChart() {
         mChart.setBorderColor(getResources().getColor(R.color.white));
         mChart.setDescriptionColor(getResources().getColor(R.color.white));
@@ -100,6 +103,7 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
             public void onValueSelected(Entry e, Highlight h) {
                 mDate.setText(Float.toString(h.getX()));
                 mMaxVal.setText(Float.toString(h.getY()));
+                displayHighlightedStockData(mStockDetails.get((int)h.getX()));
             }
 
             @Override
@@ -114,18 +118,19 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
         axis.setTextColor(getResources().getColor(R.color.white));
         axis.setValueFormatter(new DateXAxisValueFormatter());
         axis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        axis.setLabelRotationAngle(60f);
     }
 
     public void styleLeftRightAxis() {
         YAxis yAxis = mChart.getAxisLeft();
         yAxis.setAxisMinValue(0f);
-        yAxis.setAxisMaxValue(1000f);
+        //yAxis.setAxisMaxValue(1000f);
         yAxis.setTextColor(getResources().getColor(R.color.white));
 
 
         yAxis = mChart.getAxisRight();
         yAxis.setAxisMinValue(0f);
-        yAxis.setAxisMaxValue(1000f);
+        //yAxis.setAxisMaxValue(1000f);
         yAxis.setTextColor(getResources().getColor(R.color.white));
     }
 
@@ -135,6 +140,7 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
         dataSet.setDrawFilled(true);
         dataSet.setDrawCircleHole(false);
         dataSet.setDrawCircles(false);
+        dataSet.setDrawValues(false);
     }
 
     public void downloadParseStoreStockDetails(String symbol, final DownloadCompleteListener listener) {
@@ -171,7 +177,7 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
                         resp = resp.getJSONObject("results");
                         JSONArray stockDetails = resp.getJSONArray("quote");
                         Log.e(_TAG, "downloaded");
-                        for(int i = 0; i < stockDetails.length(); i++) {
+                        for(int i = stockDetails.length() - 1; i >= 0; i--) {
                             HistoricalStock stock = new HistoricalStock(stockDetails.getJSONObject(i));
                             //mStockDetails.add(new HistoricalStock(stockDetails.getJSONObject(i)));
                             mStockDetails.add(stock);
@@ -249,8 +255,10 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
         styleLeftRightAxis();
         ArrayList<Pair> data = genTrialData();
         List<Entry> entries = new ArrayList<Entry>();
-        for(Pair p : data) {
-            entries.add(new Entry(p.x, p.y));
+        int len = mStockDetails.size() - 1;
+        for(int i = len; i >= 0; i--) {
+            HistoricalStock stock = mStockDetails.get(i);
+            entries.add(new Entry((float)(len - i), stock.getMaxVal()));
         }
         LineDataSet lDataSet = new LineDataSet(entries, "trial_data");
         styleDataSet(lDataSet);
@@ -269,6 +277,7 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
             setContentView(R.layout.activity_line_graph);
             Intent intent = getIntent();
             String symbol = intent.getStringExtra(MyStocksActivity.STOCK_SYMBOL);
+            String curVal = intent.getStringExtra(MyStocksActivity.STOCK_CUR_VAL);
             if(mStockDetails == null) {
                 mStockDetails = new ArrayList<>();
             }
@@ -276,7 +285,9 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
             logDownloadedDetails();
             setViewReferences();
 
-            mSymbol.setText(symbol + " SAI ");
+            mSymbol.setText(symbol);
+            mDate.setText(getCurrentDate());
+            mMaxVal.setText(curVal);
         }
     }
 
