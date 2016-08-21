@@ -47,41 +47,19 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
     private TextView mMaxVal;
     private LineChart mChart;
     private ArrayList<HistoricalStock> mStockDetails;
-    private static int detailLen = -1;
-
-    class Pair {
-        float x;
-
-        public Pair(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        float y;
-    }
 
     public void onDownloadCompleteListener() {
         logDownloadedDetails();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                detailLen = mStockDetails.size() - 1;
                 plotChart();
             }
         });
     }
 
-    public ArrayList<Pair> genTrialData() {
-        ArrayList<Pair> temp = new ArrayList<>();
-        for(int i = 0; i < 100; i++) {
-            temp.add(new Pair(i, 10 * i));
-        }
-        return temp;
-    }
-
     public void setViewReferences() {
         mSymbol = (TextView)findViewById(R.id.textview_detail_stock_name);
-        mSymbol.setText("SAI");
         mDate = (TextView)findViewById(R.id.stock_date);
         mMaxVal = (TextView)findViewById(R.id.stock_max_val);
         mChart = (LineChart)findViewById(R.id.stock_linechart);
@@ -89,7 +67,9 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
 
     public void displayHighlightedStockData(HistoricalStock stock) {
         mDate.setText(stock.getCalendarDate());
+        mDate.setContentDescription(getString(R.string.cd_stock_date));
         mMaxVal.setText(Float.toString(stock.getMaxVal()));
+        mMaxVal.setContentDescription(getString(R.string.cd_stock_value));
     }
 
     public void beautifyChart() {
@@ -152,6 +132,7 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
         }
         try {
             String requestURL = buildQuery(symbol);
+            Log.e(_TAG, "request url : " + requestURL);
             OkHttpClient client = new OkHttpClient();
             final Request request = new Request.Builder()
                     .url(requestURL)
@@ -235,6 +216,9 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
         StringBuilder sb = new StringBuilder();
         sb.append(year);
         sb.append("-");
+        if(month < 10) {
+            sb.append("0");
+        }
         sb.append(month);
         sb.append("-");
         sb.append(date);
@@ -253,7 +237,6 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
         beautifyChart();
         styleXAxis();
         styleLeftRightAxis();
-        ArrayList<Pair> data = genTrialData();
         List<Entry> entries = new ArrayList<Entry>();
         int len = mStockDetails.size() - 1;
         for(int i = len; i >= 0; i--) {
@@ -286,6 +269,7 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
             setViewReferences();
 
             mSymbol.setText(symbol);
+            mSymbol.setContentDescription(getString(R.string.cd_stock_symbol));
             mDate.setText(getCurrentDate());
             mMaxVal.setText(curVal);
         }

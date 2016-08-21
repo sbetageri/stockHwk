@@ -12,4 +12,16 @@
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
     <string name="fab_button_desc">Button to add new Stock</string>
     <string name="no_network_str">No Network Connection Available</string>
+
+    <!-- content description base for stock symbol -->
+    <string name="cd_stock_symbol">Stock Symbol is </string>
+
+    <!-- Content description base for bid price -->
+    <string name="cd_bid_price">Current bid price is </string>
+
+    <!-- Content descriptor of stock date in detail activity -->
+    <string name="cd_stock_date">Date</string>
+
+    <!-- Content descriptor of Stock's value(Detail act) -->
+    <string name="cd_stock_value">Value of Stock</string>
 </resources>
