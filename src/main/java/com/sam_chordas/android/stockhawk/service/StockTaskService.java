@@ -1,8 +1,12 @@
 package com.sam_chordas.android.stockhawk.service;
 
+import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -12,15 +16,18 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
+import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
+import com.sam_chordas.android.stockhawk.ui.StockAppWidgetProvider;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -135,6 +142,8 @@ public class StockTaskService extends GcmTaskService{
             contentValues.put(QuoteColumns.ISCURRENT, 0);
             mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
                 null, null);
+            updateWidgetData();
+            updateWidgetViews();
           }
           ArrayList<ContentProviderOperation> res = Utils.quoteJsonToContentVals(getResponse);
           if(res == null || res.size() == 0) {
@@ -143,6 +152,8 @@ public class StockTaskService extends GcmTaskService{
           } else {
             mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY, res);
             //Utils.quoteJsonToContentVals(getResponse)); // place where error arises
+            updateWidgetData();
+            updateWidgetViews();
           }
         }catch (RemoteException | OperationApplicationException e){
           Log.e(LOG_TAG, "Error applying batch insert", e);
@@ -152,5 +163,20 @@ public class StockTaskService extends GcmTaskService{
       }
     }
     return result;
+  }
+
+  private void updateWidgetData() {
+    Log.e(LOG_TAG, "updating widget data");
+    Intent intent = new Intent(StockAppWidgetProvider.UPDATE_WIDGET);
+    mContext.sendBroadcast(intent);
+  }
+
+  private void updateWidgetViews() {
+    Log.e(LOG_TAG, "updating the views of the widget");
+    Intent intent = new Intent(this, StockAppWidgetProvider.class);
+    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+    ComponentName name = new ComponentName(mContext, StockAppWidgetProvider.class);
+    int[] appWidgetIds = AppWidgetManager.getInstance(mContext).getAppWidgetIds(name);
   }
 }

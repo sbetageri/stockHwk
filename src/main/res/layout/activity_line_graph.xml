@@ -27,24 +27,32 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent">
 
+                <!-- very weird results when setting gravity here-->
                 <TextView
+                    android:layout_weight="1"
+                    tools:text="sai ram symbol"
+                    android:gravity="center"
                     android:id="@+id/textview_detail_stock_name"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/activity_text_size"/>
+                    android:textSize="@dimen/activity_text_size"
+                    android:layout_height="0dp"/>
+
+
 
                 <TextView
                     android:layout_weight="1"
+                    tools:text="sai ram date"
                     android:id="@+id/stock_date"
                     android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:textSize="@dimen/activity_text_size_small"
                     android:layout_height="0dp"/>
             </LinearLayout>
             <TextView
                 android:layout_weight="1"
                 android:id="@+id/stock_max_val"
                 android:textSize="@dimen/activity_text_size"
-                tools:text="sai ram"
+                tools:text="sai ram max val"
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"/>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Stock Hawk</string>
+    <string translatable="false" name="app_name">Stock Hawk</string>
 
     <string name="action_example">Example action</string>
 

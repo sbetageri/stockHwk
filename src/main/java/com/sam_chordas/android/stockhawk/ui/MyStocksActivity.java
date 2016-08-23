@@ -5,6 +5,7 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -19,6 +20,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +42,8 @@ import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.melnykov.fab.FloatingActionButton;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
+
+import java.util.Locale;
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -63,6 +67,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     public static final String STOCK_CUR_VAL = "stock_current_value";
 
 
+    private static final String _TAG = "my_stock_activity";
     private static final int SET_ACTIVITY_REF_FLAG = 100;
     private static final int UNSET_ACTIVITY_REF_FLAG = 102;
 
@@ -114,6 +119,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        Locale l = mContext.getApplicationContext().getResources().getConfiguration().locale;
+        Log.e(_TAG, l.toString());
         Message setHandlerAct = sHandler.obtainMessage(SET_ACTIVITY_REF_FLAG, this);
         setHandlerAct.sendToTarget();
         ConnectivityManager cm =

@@ -10,4 +10,6 @@
     <dimen name="widget_padding">4dp</dimen>
 
     <dimen name="activity_text_size">20dp</dimen>
+
+    <dimen name="activity_text_size_small">14dp</dimen>
 </resources>

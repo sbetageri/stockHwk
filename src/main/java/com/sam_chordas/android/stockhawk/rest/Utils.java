@@ -120,7 +120,9 @@ public class Utils {
         e.printStackTrace();
       }
     }
-    if((keyCount - 2)== nullKeyCount) {
+    Log.e(LOG_TAG, "key count : " + Integer.toString(keyCount));
+    Log.e(LOG_TAG, "null key count : " + Integer.toString(nullKeyCount));
+    if((keyCount - nullKeyCount) <= 9) {
       return false;
     }
     return true;

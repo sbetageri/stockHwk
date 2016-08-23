@@ -46,14 +46,17 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
   @Override
   public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor){
     String symbol = cursor.getString(cursor.getColumnIndex("symbol"));
-    symbol = mContext.getString(R.string.cd_stock_symbol) + symbol;
 
     String bidPrice = cursor.getString(cursor.getColumnIndex("bid_price"));
-    bidPrice = mContext.getString(R.string.cd_bid_price) + bidPrice;
+
     viewHolder.symbol.setText(symbol);
+    symbol = mContext.getString(R.string.cd_stock_symbol) + symbol;
     viewHolder.symbol.setContentDescription(symbol);
+
     viewHolder.bidPrice.setText(bidPrice);
+    bidPrice = mContext.getString(R.string.cd_bid_price) + bidPrice;
     viewHolder.bidPrice.setContentDescription(bidPrice);
+
     int sdk = Build.VERSION.SDK_INT;
     if (cursor.getInt(cursor.getColumnIndex("is_up")) == 1){
       if (sdk < Build.VERSION_CODES.JELLY_BEAN){

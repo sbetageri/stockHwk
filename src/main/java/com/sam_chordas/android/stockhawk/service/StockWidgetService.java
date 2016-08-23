@@ -37,7 +37,8 @@ class StockRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
-
+        Log.e(_TAG, "why isn't it coming here");
+        loadDbDataToList();
     }
 
     @Override
@@ -91,11 +92,17 @@ class StockRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
         new String[]{"1"},
 
              */
+        Log.e(_TAG, "service.onCreate");
+        loadDbDataToList();
+    }
+
+    private void loadDbDataToList() {
         Cursor cursor = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                 new String[]{QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE},
                 QuoteColumns.ISCURRENT + " = ?",
                 new String[]{"1"}, null);
-        Log.e(_TAG, "service.onCreate");
+        Log.e(_TAG, "CURSOR COUNT : " + Integer.toString(cursor.getCount()));
         stockList = StockWidget.getStockList(cursor);
+        Log.e(_TAG, "stock list size : " + Integer.toString(stockList.size()));
     }
 }
