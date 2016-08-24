@@ -219,7 +219,7 @@ public class StockDetailActivity extends Activity implements DownloadCompleteLis
         if(month < 10) {
             sb.append("0");
         }
-        sb.append(month);
+        sb.append(month + 1);
         sb.append("-");
         sb.append(date);
         return sb.toString();
