@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
-              android:background="@color/md_material_blue_800"
+              android:background="@color/primary_color_translucent"
+              android:id="@+id/stock_widget_item"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <TextView
         android:id="@+id/widget_stock_symbol"
         android:layout_weight="1"
-        android:textColor="#fff"
-        android:textSize="20sp"
+        android:textColor="@color/text"
+        android:textSize="@dimen/widget_text_size"
         android:gravity="center"
         android:layout_width="0dp"
         android:layout_height="match_parent"/>
     <TextView
         android:id="@+id/widget_stock_bidprice"
-        android:gravity="end"
-        android:textColor="#fff"
+        android:gravity="center"
+        android:textColor="@color/text"
+        android:textSize="@dimen/widget_text_size"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent"/>

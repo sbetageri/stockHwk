@@ -142,8 +142,7 @@ public class StockTaskService extends GcmTaskService{
             contentValues.put(QuoteColumns.ISCURRENT, 0);
             mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
                 null, null);
-            updateWidgetData();
-            updateWidgetViews();
+            Utils.updateWidgetViews(mContext);
           }
           ArrayList<ContentProviderOperation> res = Utils.quoteJsonToContentVals(getResponse);
           if(res == null || res.size() == 0) {
@@ -152,8 +151,8 @@ public class StockTaskService extends GcmTaskService{
           } else {
             mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY, res);
             //Utils.quoteJsonToContentVals(getResponse)); // place where error arises
-            updateWidgetData();
-            updateWidgetViews();
+            Utils.updateWidgetViews(mContext);
+            //updateWidgetViews();
           }
         }catch (RemoteException | OperationApplicationException e){
           Log.e(LOG_TAG, "Error applying batch insert", e);

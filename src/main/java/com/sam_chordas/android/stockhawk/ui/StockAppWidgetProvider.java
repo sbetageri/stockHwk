@@ -1,5 +1,6 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -52,6 +53,11 @@ public class StockAppWidgetProvider extends AppWidgetProvider {
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.stock_widget_list);
             rv.setRemoteAdapter(appWidgetIds[i], R.id.stock_widget_list_layout_view, intent);
             rv.setEmptyView(appWidgetIds[i], R.id.empty_list_widget_view);
+
+            Intent activityIntent = new Intent(context, StockDetailActivity.class);
+            PendingIntent pIntent = PendingIntent.getActivity(context, 0, activityIntent, PendingIntent.FLAG_ONE_SHOT);
+            rv.setPendingIntentTemplate(R.id.stock_widget_list_layout_view, pIntent);
+
             appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);

@@ -37,6 +37,7 @@ public class StockWidget {
         if(cursor != null && cursor.getCount() > 0) {
             for(int i = 0; i < cursor.getCount(); i++) {
                 String sym = cursor.getString(cursor.getColumnIndex(QuoteColumns.SYMBOL));
+                sym = sym.toUpperCase();
                 String price = cursor.getString(cursor.getColumnIndex(QuoteColumns.BIDPRICE));
                 StockWidget obj = new StockWidget(sym, price);
                 stockList.add(obj);

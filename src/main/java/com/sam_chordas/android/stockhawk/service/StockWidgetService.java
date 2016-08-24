@@ -11,6 +11,7 @@ import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.data.StockWidget;
+import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,8 @@ import java.util.ArrayList;
  * Created by Admin on 14-08-2016.
  */
 public class StockWidgetService extends RemoteViewsService {
+
+    public static final String CLICKABLE_INTENT = "clickable_intnet";
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new StockRemoteViewFactory(this.getApplicationContext(), intent);
@@ -78,7 +81,18 @@ class StockRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
         Log.e(_TAG, sw.toString());
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_item);
         rv.setTextViewText(R.id.widget_stock_symbol, sw.getSymbol());
+        String cdSymbol = mContext.getString(R.string.cd_stock_symbol);
+        rv.setContentDescription(R.id.widget_stock_symbol, cdSymbol + sw.getSymbol());
+
+        String cdBidPrice = mContext.getString(R.string.cd_bid_price);
         rv.setTextViewText(R.id.widget_stock_bidprice, sw.getBidPrice());
+        rv.setContentDescription(R.id.widget_stock_bidprice, cdBidPrice + sw.getBidPrice());
+
+        Intent intent = new Intent();
+        intent.setAction(StockWidgetService.CLICKABLE_INTENT);
+        intent.putExtra(MyStocksActivity.STOCK_SYMBOL, sw.getSymbol());
+        intent.putExtra(MyStocksActivity.STOCK_CUR_VAL, sw.getBidPrice());
+        rv.setOnClickFillInIntent(R.id.stock_widget_item, intent);
         return rv;
     }
 

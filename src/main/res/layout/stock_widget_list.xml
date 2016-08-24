@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:background="@color/md_material_blue_800"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@color/primary_color_translucent"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_primary_color"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="STOCKHAWK"
+        android:textColor="@color/text"
+        android:textSize="@dimen/widget_text_size_large"/>
+
     <ListView
         android:id="@+id/stock_widget_list_layout_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/widget_padding">
+        android:layout_height="match_parent">
     </ListView>
 
     <TextView
-        android:textColor="@color/common_google_signin_btn_text_dark_default"
-        android:textSize="20sp"
         android:id="@+id/empty_list_widget_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</FrameLayout>
+        android:layout_height="match_parent"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textSize="@dimen/widget_text_size_large"/>
+</LinearLayout>

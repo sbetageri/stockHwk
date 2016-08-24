@@ -2,11 +2,14 @@ package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.ui.StockAppWidgetProvider;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -126,6 +129,11 @@ public class Utils {
     } catch(JSONException e) {
       return 0;
     }
+  }
+
+  public static void updateWidgetViews(Context context) {
+    Intent intent = new Intent(StockAppWidgetProvider.UPDATE_WIDGET);
+    context.sendBroadcast(intent);
   }
 
   public static boolean isConnected(Context context) {
