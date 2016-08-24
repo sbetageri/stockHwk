@@ -42,11 +42,12 @@ public class Utils {
           //batchOperations.add(buildBatchOperation(jsonObject));
         } else{
           resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
-
           if (resultsArray != null && resultsArray.length() != 0){
             for (int i = 0; i < resultsArray.length(); i++){
               jsonObject = resultsArray.getJSONObject(i);
-              batchOperations.add(buildBatchOperation(jsonObject));
+              if(isValidStock(jsonObject)) {
+                batchOperations.add(buildBatchOperation(jsonObject));
+              }
             }
           }
         }
@@ -103,29 +104,28 @@ public class Utils {
   }
 
   public static boolean isValidStock(JSONObject json) {
-    Log.e(LOG_TAG, "JSON : " + json.toString());
-    Iterator<String> keys = json.keys();
-    int keyCount = 0;
-    int nullKeyCount = 0;
-    while(keys.hasNext()) {
-      keyCount += 1;
-      try {
-        String value = (String)json.getString(keys.next());
-        if(value.equals("null")) {
-          nullKeyCount += 1;
-        }
-      } catch(Exception e) {
-        nullKeyCount += 1;
-        Log.e(LOG_TAG, e.toString());
-        e.printStackTrace();
-      }
-    }
-    Log.e(LOG_TAG, "key count : " + Integer.toString(keyCount));
-    Log.e(LOG_TAG, "null key count : " + Integer.toString(nullKeyCount));
-    if((keyCount - nullKeyCount) <= 9) {
+    int count = 0;
+    count += hasValidField(json, "symbol");
+    count += hasValidField(json, "Change");
+    count += hasValidField(json, "Bid");
+    count += hasValidField(json, "ChangeinPercent");
+    if(count < 4) {
       return false;
+    } else {
+      return true;
     }
-    return true;
+  }
+
+  public static int hasValidField(JSONObject json, String fieldName) {
+    try {
+      String val = json.getString(fieldName);
+      if(val.equals("null")) {
+        return 0;
+      }
+      return 1;
+    } catch(JSONException e) {
+      return 0;
+    }
   }
 
   public static boolean isConnected(Context context) {

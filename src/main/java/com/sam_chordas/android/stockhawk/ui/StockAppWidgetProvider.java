@@ -26,9 +26,11 @@ public class StockAppWidgetProvider extends AppWidgetProvider {
         Log.e(_TAG, "on receive");
         if(intent.getAction().equals(UPDATE_WIDGET)) {
             ComponentName name = new ComponentName(context, StockAppWidgetProvider.class);
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = AppWidgetManager.getInstance(context)
                     .getAppWidgetIds(name);
-            onUpdate(context, AppWidgetManager.getInstance(context), appWidgetIds);
+            //onUpdate(context, AppWidgetManager.getInstance(context), appWidgetIds);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.stock_widget_list_layout_view);
         } else if (intent.getAction().equals(APPWIDGET_UPADTE)) {
             Log.e(_TAG, "receive : update :-> : ");
             ComponentName name = new ComponentName(context, StockAppWidgetProvider.class);
